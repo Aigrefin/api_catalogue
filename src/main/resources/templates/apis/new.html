@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="apis/fragments/common :: head"></head>
+    <body>
+        <div class="header">
+            <div th:replace="apis/fragments/common :: menubar"></div>
+
+            <div th:switch="${success}">
+                <div th:case="true" class="success-subheader" style="background-color: lightgreen">
+                    API Created.
+                </div>
+                <div th:case="false" class="failure-subheader" style="background-color: red">
+                    Failed to create API. <span th:text="${errormsg}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <h2>Create new API</h2>
+            <div class="creation-form">
+                <form action="/new-api" method="post" enctype="multipart/form-data">
+                    Name :<br/>
+                    <input type="text" name="name" /><br/><br/>
+                    Version :<br/>
+                    <input type="text" name="version" /><br/><br/>
+                    Specification type :<br/>
+                    <input type="text" name="specificationType" /><br/><br/>
+                    Specification file :<br/>
+                    <input type="file" name="file" /><br/><br/>
+                    <input type="submit" value="Créer" />
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

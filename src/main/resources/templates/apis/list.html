@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="apis/fragments/common :: head"></head>
+    <body>
+        <div class="header">
+            <div th:replace="apis/fragments/common :: menubar"></div>
+        </div>
+
+        <div class="page-content">
+            <h2>APIs list</h2>
+            <div class="api-list">
+                <p th:each="api : ${apis}">
+                    <span th:utext="${api.displayName}"></span>
+                    <a th:href="${api.downloadLink}" th:text="${api.specificationType}"></a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,112 @@
+FORMAT: 1A
+
+# Group Apis
+
+## Apis Collection [/catalogueApi/apis{?page,pageSize}]
+
+### List all Apis [GET]
+
++ Parameters
+    + page (number, optional) - a page of the collection of APIs
+        + Default: `1`
+    + pageSize (number, optional) - number of Apis per page
+        + Default: `50`
+
++ Response 200 (application/json)
+
+        {
+            "content": [
+                {
+                    "id": 2,
+                    "name": "Shop API",
+                    "version": "1.2",
+                    "specificationPath": "/catalogueApi/apis/2/specificationFile",
+                    "specificationType": "blueprint"
+                }
+            ],
+            "totalPages": 1,
+            "totalElements": 1,
+            "last": true,
+            "size": 50,
+            "number": 0,
+            "sort": null,
+            "numberOfElements": 1,
+            "first": true
+        }
+
+### Post a new Api [POST]
+
+You may create your own Api using this action. It takes a multipart request with a JSON object containing an Api and a file with a specified contentType. The curl command for this kind of action is : `curl -i -X POST -H "Content-Type:multipart/form-data" -F "file=@<path_to_file>;type=<mime-type_of_the_file>" -F 'api={"name":"Shop API","version":"1.4","specificationType":"blueprint"}' <address_to_catalogue_server>/catalogueApi/apis`.
+
++ Request (multipart/form-data, boundary=AaB03x)
+
+    + Body
+
+            --AaB03x
+            content-disposition: form-data; name="api"
+
+            {
+                "id": 1,
+                "name": "Shop API",
+                "version": "1.4",
+                "specificationPath": "/catalogueApi/apis/1/specificationFile",
+                "specificationType":"blueprint"
+            }
+            --AaB03x
+            content-disposition: form-data; name="userfile"; filename="$filename"
+            Content-Type: application/json
+
+            $data
+            --AaB03x--
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /catalogueApi/apis/1
+
+    + Body
+
+            {
+                "id": 1,
+                "name": "Shop API",
+                "version": "1.4",
+                "specificationPath": "/catalogueApi/apis/1/specificationFile",
+                "specificationType":"blueprint"
+            }
+
+## Api [/catalogueApi/apis/{api_id}]
+
+### Select an Api [GET]
+
++ Response 200 (application/json)
+
+            {
+                "id": 1,
+                "name": "Shop API",
+                "version": "1.4",
+                "specificationPath": "/catalogueApi/apis/1/specificationFile",
+                "specificationType": "blueprint"
+            }
+
+### Delete [DELETE]
+
++ Response 204
+
+## Specification file [/catalogueApi/apis/{api_id}/specificationFile]
+
+### Download the specification file [GET]
+
++ Response 200
+
+            $data
+
+# Data Structures
+
+## Api (object)
+
++ id (number) - identify the api ressource in the collection
++ name (string) - the name of the api, this field is unique combined to version
++ version (string) - the version of the api, this field is unique combined to name
++ specificationPath (string) - a url to download the api's specification file
++ specificationType (string) - where you can distinguish between blueprint, swagger or any other specification type

@@ -1,0 +1,87 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    color: #212121;
+    font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: 0.02em;
+
+}
+
+.header {
+    background-color: darkblue;
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.menulinks a,
+.menulinks a:link,
+.menulinks a:visited,
+.menulinks a:hover,
+.menulinks a:active {
+    text-decoration: underline;
+    color: lightgrey;
+    padding-left: 5px;
+}
+
+.menulinks {
+    display: inline-block;
+    float: right;
+    padding-right: 15px;
+    padding-top: 10px;
+}
+
+.success-subheader {
+    background-color: lightgreen;
+    padding-left: 15px;
+}
+
+.failure-subheader {
+    color: white;
+    background-color: red;
+    padding-left: 15px;
+}
+
+h1 {
+    margin: 0;
+    padding-left: 15px;
+    color: white;
+    display: inline;
+}
+
+h2 {
+    padding-left: 25px;
+}
+
+.page-content {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.api-list {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.api-list > p {
+    border-left: thin solid lightgrey;
+    border-right: thin solid lightgrey;
+    border-top: thin solid lightgrey;
+    margin: 0 10px;
+    padding: 10px;
+}
+
+.api-list > p:last-child {
+    border-bottom: thin solid lightgrey;
+}
+
+.creation-form {
+    margin-left: 25px;
+    margin-right: 25px;
+}
