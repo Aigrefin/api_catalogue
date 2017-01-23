@@ -15,13 +15,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -163,32 +163,34 @@ public class ApiControllerTest {
     @Test
     public void shouldReturnSpecificationFile_WithFilePath() {
         // Given
-        String expectedPath = "/absolute/path";
         SpecificationFile serverSpecificationFile = mock(SpecificationFile.class);
-        when(serverSpecificationFile.getFilePath()).thenReturn(expectedPath);
+        String fileContent = "fileContent";
+        when(serverSpecificationFile.getFileContent()).thenReturn(fileContent);
         Api api = mock(Api.class);
         when(api.getSpecificationFile()).thenReturn(serverSpecificationFile);
         when(apiService.getApi(anyLong())).thenReturn(api);
 
         // When
-        ResponseEntity<FileSystemResource> specificationFile = apiController.getSpecificationFile(42L);
+        ResponseEntity specificationFile = apiController.getSpecificationFile(42L);
 
         // Then
-        assertThat(specificationFile.getBody().getFile().getAbsolutePath()).isEqualTo(expectedPath);
+        byte[] body = (byte[]) specificationFile.getBody();
+        String actual = new String(body, Charset.forName("UTF-8"));
+        assertThat(actual).isEqualTo(fileContent);
     }
 
     @Test
     public void shouldReturnSpecificationFile_WithContentType() {
         // Given
         SpecificationFile serverSpecificationFile = mock(SpecificationFile.class);
-        when(serverSpecificationFile.getFilePath()).thenReturn("/path");
+        when(serverSpecificationFile.getFileContent()).thenReturn("fileContent");
         when(serverSpecificationFile.getContentType()).thenReturn("application/yumyum");
         Api api = mock(Api.class);
         when(api.getSpecificationFile()).thenReturn(serverSpecificationFile);
         when(apiService.getApi(anyLong())).thenReturn(api);
 
         // When
-        ResponseEntity<FileSystemResource> specificationFile = apiController.getSpecificationFile(42L);
+        ResponseEntity specificationFile = apiController.getSpecificationFile(42L);
 
         // Then
         assertThat(specificationFile.getHeaders().getFirst("Content-Type")).isEqualTo("application/yumyum");

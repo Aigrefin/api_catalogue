@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -62,13 +61,11 @@ public class ApiController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{apiId}/specificationFile")
     @ResponseBody
-    public ResponseEntity<FileSystemResource> getSpecificationFile(@PathVariable Long apiId) {
+    public ResponseEntity getSpecificationFile(@PathVariable Long apiId) {
         Api api = apiService.getApi(apiId);
         SpecificationFile specificationFile = api.getSpecificationFile();
-        String specificationFilePath = specificationFile.getFilePath();
-        FileSystemResource sendableSpecificationFile = new FileSystemResource(specificationFilePath);
         HttpHeaders headers = getHttpHeadersWithGivenContentType(specificationFile);
-        return new ResponseEntity<>(sendableSpecificationFile, headers, HttpStatus.OK);
+        return new ResponseEntity<>(specificationFile.getFileContent().getBytes(), headers, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{apiId}")

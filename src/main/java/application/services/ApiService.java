@@ -13,7 +13,6 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 @Service
@@ -35,7 +34,7 @@ public class ApiService {
             newApi.setId(foundApiId);
         }
 
-        SpecificationFile savedSpecificationFile = makeSpecificationFile(newApi, uploadedFile);
+        SpecificationFile savedSpecificationFile = makeSpecificationFile(uploadedFile);
         newApi.setSpecificationFile(savedSpecificationFile);
 
         Api savedApi = apiRepository.save(newApi);
@@ -74,13 +73,12 @@ public class ApiService {
         return apiRepository.findByNameAndVersion(apiName, apiVersion);
     }
 
-    private SpecificationFile makeSpecificationFile(Api newApi, MultipartFile uploadedFile) throws IOException {
-        File savedFile = fileUtils.moveToUploadDirectory(uploadedFile, newApi);
+    private SpecificationFile makeSpecificationFile(MultipartFile uploadedFile) throws IOException {
+        String fileContent = fileUtils.multipartfileToString(uploadedFile);
         String contentType = uploadedFile.getContentType();
-        String filePath = savedFile.getAbsolutePath();
         SpecificationFile specificationFile = new SpecificationFile();
         specificationFile.setContentType(contentType);
-        specificationFile.setFilePath(filePath);
+        specificationFile.setFileContent(fileContent);
         return specificationFileRepository.save(specificationFile);
     }
 

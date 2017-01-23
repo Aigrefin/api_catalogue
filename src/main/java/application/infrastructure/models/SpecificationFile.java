@@ -11,24 +11,8 @@ public class SpecificationFile {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private String filePath;
     private String contentType;
-
-    public long getId() {
-        return id;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private String fileContent;
 
     public String getContentType() {
         return contentType;
@@ -36,5 +20,13 @@ public class SpecificationFile {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
     }
 }

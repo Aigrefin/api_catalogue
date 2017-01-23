@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 
 import static java.util.Arrays.asList;
@@ -50,7 +49,7 @@ public class ApiServiceTest {
         apiToSave = new Api();
         savedApi = mock(Api.class);
         fileToSave = mock(MultipartFile.class);
-        when(fileUtils.moveToUploadDirectory(any(MultipartFile.class), any(Api.class))).thenReturn(mock(File.class));
+        when(fileUtils.multipartfileToString(any(MultipartFile.class))).thenReturn("fileContent");
         when(apiRepository.save(any(Api.class))).thenReturn(mock(Api.class));
     }
 
@@ -115,12 +114,10 @@ public class ApiServiceTest {
     }
 
     @Test
-    public void shouldSetFilePathInSpecification_FromFileMove_WhenSavingAPI() throws IOException {
+    public void shouldSetFileContentInSpecification_WhenSavingAPI() throws IOException {
         // Given
-        String absolutePath = "/some/absolute/path";
-        File savedFile = mock(File.class);
-        when(savedFile.getAbsolutePath()).thenReturn(absolutePath);
-        when(fileUtils.moveToUploadDirectory(fileToSave, apiToSave)).thenReturn(savedFile);
+        String fileContent = "fileContent";
+        when(fileUtils.multipartfileToString(fileToSave)).thenReturn(fileContent);
 
         // When
         apiService.saveApi(apiToSave, fileToSave);
@@ -129,8 +126,8 @@ public class ApiServiceTest {
         ArgumentCaptor<SpecificationFile> specificationFileCaptor = ArgumentCaptor.forClass(SpecificationFile.class);
         verify(specificationFileRepository).save(specificationFileCaptor.capture());
         SpecificationFile capturedSpecificationFile = specificationFileCaptor.getValue();
-        String capturedFilePath = capturedSpecificationFile.getFilePath();
-        assertThat(capturedFilePath).isEqualTo(absolutePath);
+        String capturedFileContent = capturedSpecificationFile.getFileContent();
+        assertThat(capturedFileContent).isEqualTo(fileContent);
     }
 
     @Test
@@ -176,9 +173,7 @@ public class ApiServiceTest {
     @Test
     public void shouldSetApiWithSpecification_ComingFromDatabase_WhenSavingAPI() throws IOException {
         // Given
-        long specificationFileId = 23L;
         SpecificationFile savedSpecificationFile = mock(SpecificationFile.class);
-        when(savedSpecificationFile.getId()).thenReturn(specificationFileId);
         when(specificationFileRepository.save(any(SpecificationFile.class))).thenReturn(savedSpecificationFile);
 
         // When
@@ -189,8 +184,7 @@ public class ApiServiceTest {
         verify(apiRepository).save(apiArgumentCaptor.capture());
         Api capturedApiArgument = apiArgumentCaptor.getValue();
         SpecificationFile specificationFile = capturedApiArgument.getSpecificationFile();
-        long capturedSpecificationFileId = specificationFile.getId();
-        assertThat(capturedSpecificationFileId).isEqualTo(specificationFileId);
+        assertThat(specificationFile).isEqualTo(savedSpecificationFile);
     }
 
     @Test
