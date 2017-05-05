@@ -1,7 +1,7 @@
 # api_catalogue
 
 Basically, a very simple API catalogue with an human interface and a http/json API.
-Linked article coming soon.
+Made for [this article](http://blog.octo.com/?p=67602&preview=true).
 
 ## How to start from the sources
 
